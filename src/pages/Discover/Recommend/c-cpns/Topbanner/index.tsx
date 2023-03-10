@@ -1,10 +1,9 @@
-import React, { memo, useEffect } from 'react';
-import type { FC, ReactNode } from 'react';
+import React, { memo, useRef, useState } from 'react';
+import type { FC, ReactNode, ElementRef } from 'react';
 import { Carousel } from 'antd';
 import { shallowEqual } from 'react-redux';
 
-import { fetchBanner } from '../../store/recommend';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppSelector } from '@/store';
 import {
   TopBannerWrapper,
   TopBannerLeft,
@@ -18,26 +17,55 @@ interface IProps {
 }
 
 const TopBanner: FC<IProps> = () => {
-  const dispatch = useAppDispatch();
+  const bannerRef = useRef<ElementRef<typeof Carousel>>(null);
 
-  useEffect(() => {
-    dispatch(fetchBanner());
-  }, []);
+  function handlePrevClick() {
+    bannerRef.current?.prev();
+  }
+
+  function handleNextClick() {
+    bannerRef.current?.next();
+  }
+
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0);
 
   const { banners } = useAppSelector((state) => state.recommend, shallowEqual);
-  console.log(banners);
+
+  let imageUrl = banners[currentBannerIndex]?.imageUrl;
+  if (imageUrl) {
+    imageUrl = imageUrl + '?imageView&blur=40x20';
+  }
+
+  const beforeChangeHandler = (from: number, to: number) => {
+    setTimeout(() => {
+      setCurrentBannerIndex(to);
+    }, 50);
+  };
 
   return (
-    <TopBannerWrapper>
+    <TopBannerWrapper
+      style={{
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: '6000px',
+        backgroundPosition: 'center center'
+      }}
+    >
       <TopBannerCenter>
         <TopBannerButton
+          onClick={handlePrevClick}
           style={{ left: '-68px', backgroundPosition: '0 -360px' }}
         ></TopBannerButton>
         <TopBannerButton
+          onClick={handleNextClick}
           style={{ right: '-68px', backgroundPosition: '0 -508px' }}
         ></TopBannerButton>
         <TopBannerLeft>
-          <Carousel autoplay>
+          <Carousel
+            autoplay
+            ref={bannerRef}
+            effect="fade"
+            beforeChange={beforeChangeHandler}
+          >
             {banners.map((item) => {
               return (
                 <div className="banner-item" key={item.imageUrl}>

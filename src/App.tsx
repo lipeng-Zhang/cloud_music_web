@@ -12,6 +12,13 @@ function App() {
       <AppHeader />
       <Suspense fallback="">{useRoutes(routes)}</Suspense>
       <AppFooter />
+      <div
+        style={{
+          height: '100px',
+          width: '200px',
+          backgroundImage: 'url(./assets/img/mine_sprite.jpg'
+        }}
+      ></div>
     </div>
   );
 }

@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 export const TopBannerWrapper = styled.div`
   height: 270px;
-  background-color: pink;
   display: flex;
   position: relative;
 `;
@@ -14,13 +13,14 @@ export const TopBannerCenter = styled.div`
   position: relative;
 `;
 export const TopBannerLeft = styled.div`
-width: 730px;
+  width: 730px;
 
-.banner-item {
-  overflow: hidden;
-  height: 270px;
-  .image {
-    width: 100%;
+  .banner-item {
+    overflow: hidden;
+    height: 270px;
+    .image {
+      width: 100%;
+    }
   }
 `;
 
